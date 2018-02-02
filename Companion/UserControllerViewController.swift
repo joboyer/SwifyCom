@@ -14,18 +14,24 @@ import SwiftyJSON
 
 class UserControllerViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
+    
+    //    @IBOutlet weak var Name: UILabel!
+    //    @IBOutlet weak var lastName: UILabel!
+    //    @IBOutlet weak var Number: UILabel!
+    //    @IBOutlet weak var Email: UILabel!
+    //    @IBOutlet weak var UserImg: UIImageView!
+
+    @IBOutlet weak var UserImg: UIImageView!
+    @IBOutlet weak var Number: UILabel!
+    @IBOutlet weak var Name: UILabel!
+    @IBOutlet weak var LastName: UILabel!
+    @IBOutlet weak var Email: UILabel!
+    
     var token : String?
     var userName : String?
     var userInfo = [[String:AnyObject]]()
     var UserInfo : [User] = []
     var ProjectInfo : [Project] = []
-    
-    func treatUser(arr: [User]){
-        self.UserInfo = arr
-        DispatchQueue.main.async {
-            self.UserTable.reloadData()
-        }
-    }
     
     func treatProjects(arr: [Project]) {
                                       print("fais un project")
@@ -75,17 +81,27 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
                                 }
                             }
                             
-                            self.UserInfo.append(
-                                User(
-                                    name: (tableUser["login"].string)!,
-                                    ln: (tableUser["displayname"].string)!,
-                                    mail: (tableUser["email"].string)!,
-                                    number: (tableUser["phone"].string)!,
-                                    img: (tableUser["image_url"].string)!
-                                )
-                            )
-                            self.treatUser(arr: self.UserInfo)
+                            self.Number.text = (tableUser["phone"].string)!
+                            self.Name.text = (tableUser["login"].string)!
+                            self.LastName.text = (tableUser["displayname"].string)!
+                            self.Email.text = (tableUser["email"].string)!
+                            
                             self.treatProjects(arr: self.ProjectInfo)
+                            
+                            let imageUrl:URL = URL(string: tableUser["image_url"].string!)!
+                            
+                            
+                            DispatchQueue.global(qos: .userInitiated).async {
+                                
+                                let imageData:NSData = NSData(contentsOf: imageUrl)!
+                                
+                                DispatchQueue.main.async {
+                                    let image = UIImage(data: imageData as Data)
+                                    self.UserImg.image = image
+                                    self.UserImg.contentMode = UIViewContentMode.scaleAspectFit
+                                    // self.view.addSubview(imageView)
+                                }
+                            }
                         }
                         
                     }
@@ -105,11 +121,6 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
         
     }
     
-    @IBOutlet weak var UserTable: UITableView! {
-        didSet{
-            UserTable.register(UITableViewCell.self, forCellReuseIdentifier: "MyCell")
-        }
-    }
     
     
     override func viewDidLoad() {
@@ -117,15 +128,11 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
 
         getUserInfo()
         
-        self.UserTable.delegate = self
-        self.UserTable.dataSource = self
-        
         self.ProjectTable.delegate = self
         self.ProjectTable.dataSource = self
         
 
      
-        UserTable.rowHeight = 180
         ProjectTable.rowHeight = 20
     }
     
@@ -135,10 +142,8 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
         
         tmp = 0
         
-        if tableView == self.UserTable {
-            tmp = UserInfo.count
-        }
-        else if tableView == self.ProjectTable {
+       
+        if tableView == self.ProjectTable {
             tmp = ProjectInfo.count
         }
         return tmp!
@@ -157,13 +162,7 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
             cell?.project = self.ProjectInfo[indexPath.row]
         }
             
-            
-        if tableView == self.UserTable {
-            print("cell User")
-            let cell = UserTable.dequeueReusableCell(withIdentifier: "myCell", for: indexPath)  as! UserTableViewCell
-            cell.user = self.UserInfo[indexPath.row]
-            return cell
-        }
+        
         
         return cell!
     }
