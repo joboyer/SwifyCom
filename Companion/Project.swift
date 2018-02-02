@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Project {
+struct NewProject {
     
     let name : String
     let rating : String

@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     
     var clientToken : String?
     var userToken : String?
-    var token : String?
+    var token : String = ""
     var tv : UserControllerViewController?
     
     
@@ -27,7 +27,6 @@ class ViewController: UIViewController {
         let name_reg = "^[A-Za-z]*$"
         
         let name_test = NSPredicate(format: "SELF MATCHES %@", name_reg)
-        //        print(name_test.evaluate(with: self.userName!))
                 print((userName?.isEmpty)!)
         if name_test.evaluate(with: userName!) == false || (userName?.isEmpty)! == true
         {
@@ -79,39 +78,6 @@ class ViewController: UIViewController {
         task.resume()
     }
     
-//    func getUserToken(code: String) {
-//
-//        let url = NSURL(string: "https://api.intra.42.fr/oauth/token")
-//        let request = NSMutableURLRequest(url: url! as URL)
-//        request.httpMethod = "POST"
-//        request.setValue("Bearer \(self.token!)", forHTTPHeaderField: "Authorization")
-//        request.httpBody = "grant_type=authorization_code&client_id=\(UID)&client_secret=\(secret)&code=\(code)&redirect_uri=https://www.42.fr&scope=public%20forum&state=coucou&state=abcdefghijklmnopqrstuvwxyz".data(using: String.Encoding.utf8)
-//        let task = URLSession.shared.dataTask(with: request as URLRequest) {
-//            (data, response, error) in
-//            if let err = error {
-//                print (err)
-//            } else if let d = data {
-//                do {
-//                    if let dic : NSDictionary = try JSONSerialization.jsonObject(with: d, options: JSONSerialization.ReadingOptions.allowFragments) as? NSDictionary {
-//                        if let t = dic["access_token"] as? String {
-//                            self.clientToken = t
-//                            self.userToken = t
-//                            print(t)
-////                            DispatchQueue.main.async {
-////                                self.performSegue(withIdentifier: "search", sender: self)
-////                            }
-//
-//                        }
-//                    }
-//                } catch (let err) {
-//                    print (err)
-//                }
-//            }
-//        }
-//        task.resume()
-//
-//    }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "search" {
             if let tv = segue.destination as? UserControllerViewController {
@@ -122,7 +88,9 @@ class ViewController: UIViewController {
     }
     
     override func viewDidLoad() {
-        self.getToken()
+        if self.token.isEmpty {
+            self.getToken()
+        }
         super.viewDidLoad()
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "42_theme")!)
         // Do any additional setup after loading the view, typically from a nib.

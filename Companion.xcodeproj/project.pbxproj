@@ -17,8 +17,6 @@
 		0669C6182010B0640064D2F5 /* CompanionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0669C6172010B0640064D2F5 /* CompanionTests.swift */; };
 		0669C6232010B0640064D2F5 /* CompanionUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0669C6222010B0640064D2F5 /* CompanionUITests.swift */; };
 		0669C6312010BA980064D2F5 /* UserControllerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0669C6302010BA980064D2F5 /* UserControllerViewController.swift */; };
-		067C81C0201247A30011B2F5 /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067C81BF201247A30011B2F5 /* UserTableViewCell.swift */; };
-		067C81C2201249450011B2F5 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067C81C1201249450011B2F5 /* User.swift */; };
 		0699CDA620110A87006E6404 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0669C647201108830064D2F5 /* SwiftyJSON.framework */; };
 		0699CDA720110A8C006E6404 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0669C63F201108830064D2F5 /* Alamofire.framework */; };
 		79CA71E8AC93DAA2B913EFF5 /* Pods_Companion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2450AB54182453DFBDA53E7C /* Pods_Companion.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -89,8 +87,6 @@
 		0669C632201107B10064D2F5 /* SwiftyJSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SwiftyJSON.swift; path = Pods/SwiftyJSON/Source/SwiftyJSON.swift; sourceTree = "<group>"; };
 		0669C634201107CF0064D2F5 /* SwiftyJSON */ = {isa = PBXFileReference; lastKnownFileType = folder; name = SwiftyJSON; path = Pods/SwiftyJSON; sourceTree = "<group>"; };
 		0669C636201108830064D2F5 /* Pods.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Pods.xcodeproj; path = Pods/Pods.xcodeproj; sourceTree = "<group>"; };
-		067C81BF201247A30011B2F5 /* UserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
-		067C81C1201249450011B2F5 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		216DE30B6EDCFC4965E426A8 /* Pods-Companion.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Companion.release.xcconfig"; path = "Pods/Target Support Files/Pods-Companion/Pods-Companion.release.xcconfig"; sourceTree = "<group>"; };
 		2450AB54182453DFBDA53E7C /* Pods_Companion.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Companion.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0ECA9D75F2012F03012FB40 /* Pods-Companion.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Companion.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Companion/Pods-Companion.debug.xcconfig"; sourceTree = "<group>"; };
@@ -156,9 +152,7 @@
 				060772952019EB6500E9153B /* Project.swift */,
 				0607729B2019EDB400E9153B /* ProjectTableViewCell.swift */,
 				0669C60B2010B0640064D2F5 /* LaunchScreen.storyboard */,
-				067C81C1201249450011B2F5 /* User.swift */,
 				0669C60E2010B0640064D2F5 /* Info.plist */,
-				067C81BF201247A30011B2F5 /* UserTableViewCell.swift */,
 				0669C6302010BA980064D2F5 /* UserControllerViewController.swift */,
 			);
 			path = Companion;
@@ -445,11 +439,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				067C81C0201247A30011B2F5 /* UserTableViewCell.swift in Sources */,
 				0607729C2019EDB400E9153B /* ProjectTableViewCell.swift in Sources */,
 				0669C6052010B0640064D2F5 /* ViewController.swift in Sources */,
 				0669C6032010B0640064D2F5 /* AppDelegate.swift in Sources */,
-				067C81C2201249450011B2F5 /* User.swift in Sources */,
 				0669C6312010BA980064D2F5 /* UserControllerViewController.swift in Sources */,
 				060772962019EB6500E9153B /* Project.swift in Sources */,
 			);

@@ -14,34 +14,18 @@ import SwiftyJSON
 
 class UserControllerViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
-    
-    //    @IBOutlet weak var Name: UILabel!
-    //    @IBOutlet weak var lastName: UILabel!
-    //    @IBOutlet weak var Number: UILabel!
-    //    @IBOutlet weak var Email: UILabel!
-    //    @IBOutlet weak var UserImg: UIImageView!
-
     @IBOutlet weak var UserImg: UIImageView!
     @IBOutlet weak var Number: UILabel!
     @IBOutlet weak var Name: UILabel!
     @IBOutlet weak var LastName: UILabel!
     @IBOutlet weak var Email: UILabel!
     
+    @IBOutlet weak var ProjectTable: UITableView!
+    
     var token : String?
     var userName : String?
     var userInfo = [[String:AnyObject]]()
-    var UserInfo : [User] = []
-    var ProjectInfo : [Project] = []
-    
-    func treatProjects(arr: [Project]) {
-                                      print("fais un project")
-        print("Count:")
-        print(ProjectInfo.count)
-        self.ProjectInfo = arr
-        DispatchQueue.main.async {
-            self.ProjectTable.reloadData()
-        }
-    }
+    var ProjectInfo : [NewProject] = []
     
     func getUserInfo() -> Void {
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
@@ -56,28 +40,33 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
                 case .success:
                     if let value = response.result.value {
                         let tableUser = JSON(value)
+                        print(tableUser)
                         let err = tableUser["error"].string
                         if err != nil {
                             let alert = UIAlertController(title: err, message: tableUser["message"].string, preferredStyle: UIAlertControllerStyle.alert)
                             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                             self.present(alert, animated: true, completion: nil)
                             self.navigationController?.popViewController(animated: true)
+                            DispatchQueue.main.async {
+                                self.performSegue(withIdentifier: "search", sender: nil)
+                            }
                         }
                         else {
                             var Projects = tableUser["projects_users"].arrayValue
                             if (Projects.first?.isEmpty)! {
                                 Projects = ["", "50"]
-                                print("EMpty broua")
                             }
                             
                             for item in Projects {
                                 if item["project"]["name"].isEmpty && item["final_mark"].isEmpty {
-                                    self.ProjectInfo.append(
-                                        Project(
-                                            na: (item["project"]["name"].string)!,
-                                            rat: item["final_mark"].int ?? 0
+                                    if item["status"] == "finished" && 1 == item["cursus_ids"].arrayValue.first! {
+                                        self.ProjectInfo.append(
+                                            NewProject(
+                                                na: (item["project"]["name"].string)!,
+                                                rat: (item["final_mark"].int ?? 0)!
+                                            )
                                         )
-                                    )
+                                    }
                                 }
                             }
                             
@@ -86,7 +75,8 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
                             self.LastName.text = (tableUser["displayname"].string)!
                             self.Email.text = (tableUser["email"].string)!
                             
-                            self.treatProjects(arr: self.ProjectInfo)
+                            //self.treatProjects(arr: self.ProjectInfo)
+                            //self.ProjectInfo = arr
                             
                             let imageUrl:URL = URL(string: tableUser["image_url"].string!)!
                             
@@ -101,6 +91,9 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
                                     self.UserImg.contentMode = UIViewContentMode.scaleAspectFit
                                     // self.view.addSubview(imageView)
                                 }
+                                DispatchQueue.main.async {
+                                    self.ProjectTable.reloadData()
+                                }
                             }
                         }
                         
@@ -114,18 +107,10 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     
-    @IBOutlet weak var ProjectTable: UITableView! {
-        didSet {
-            ProjectTable.register(UITableViewCell.self, forCellReuseIdentifier: "ProjectCell")
-        }
-        
-    }
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.view.backgroundColor = UIColor(patternImage: UIImage(named: "42_theme")!)
         getUserInfo()
         
         self.ProjectTable.delegate = self
@@ -133,43 +118,42 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
         
 
      
-        ProjectTable.rowHeight = 20
+        ProjectTable.rowHeight = 30
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        var tmp : Int?
-        
-        tmp = 0
-        
-       
-        if tableView == self.ProjectTable {
-            tmp = ProjectInfo.count
+   
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "backToHome" {
+            if let tv = segue.destination as? ViewController {
+                tv.token = String("")
+            }
         }
-        return tmp!
-        
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        print("indexPath.row : ")
-        print(indexPath.row)
-        var cell: ProjectTableViewCell?
-        
-        if indexPath.row == 1 {
-            print("cell Project")
-            cell = ProjectTable.dequeueReusableCell(withIdentifier: "ProjectCell", for: indexPath) as? ProjectTableViewCell
-            cell?.project = self.ProjectInfo[indexPath.row]
-        }
-            
-        
-        
-        return cell!
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
 
     }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return (ProjectInfo.count)
+    }
+    
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return UITableViewAutomaticDimension
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
+
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCell", for: indexPath) as! ProjectTableViewCell
+        print(ProjectInfo[indexPath.row].name)
+        cell.tuple = (ProjectInfo[indexPath.row].name, ProjectInfo[indexPath.row].rating)
+        return cell
+    }
 }
