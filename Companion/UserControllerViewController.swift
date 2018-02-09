@@ -52,39 +52,63 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
                             }
                         }
                         else {
-                            var Projects = tableUser["projects_users"].arrayValue
-                            if (Projects.first?.isEmpty)! {
-                                Projects = ["", "50"]
-                            }
                             
-                            for item in Projects {
-                                if item["project"]["name"].isEmpty && item["final_mark"].isEmpty {
-                                    if item["status"] == "finished" && 1 == item["cursus_ids"].arrayValue.first! {
-                                        self.ProjectInfo.append(
-                                            NewProject(
-                                                na: (item["project"]["name"].string)!,
-                                                rat: (item["final_mark"].int ?? 0)!
+                            if (tableUser["project_users"].exists()) {
+                                var Projects = tableUser["projects_users"].arrayValue
+                            
+                                if (Projects.first?.isEmpty)! {
+                                    Projects = ["", "50"]
+                                }
+                            
+                                for item in Projects {
+                                    if item["project"]["name"].isEmpty && item["final_mark"].isEmpty {
+                                        if item["status"] == "finished" && 1 == item["cursus_ids"].arrayValue.first! {
+                                            self.ProjectInfo.append(
+                                                NewProject(
+                                                    na: (item["project"]["name"].string)!,
+                                                    rat: (item["final_mark"].int ?? 0)!
+                                                )
                                             )
-                                        )
+                                        }
                                     }
                                 }
+                            
                             }
                             
-                            self.Number.text = (tableUser["phone"].string)!
-                            self.Name.text = (tableUser["login"].string)!
-                            self.LastName.text = (tableUser["displayname"].string)!
-                            self.Email.text = (tableUser["email"].string)!
+                            if (!(tableUser["phone"].exists())) {
+                                self.Number.text = (tableUser["phone"].string)!
+                            }
+                            else {
+                                self.Number.text = "0000000000"
+                            }
                             
+                            if (!(tableUser["login"].string?.isEmpty)!) {
+                                self.Name.text = (tableUser["login"].string)!
+                            }
+                            if (!(tableUser["displayname"].string?.isEmpty)!) {
+                                self.LastName.text = (tableUser["displayname"].string)!
+                            }
+                            if (!(tableUser["email"].string?.isEmpty)!) {
+                                self.Email.text = (tableUser["email"].string)!
+                            }
                             //self.treatProjects(arr: self.ProjectInfo)
                             //self.ProjectInfo = arr
-                            
-                            let imageUrl:URL = URL(string: tableUser["image_url"].string!)!
-                            
+        
                             
                             DispatchQueue.global(qos: .userInitiated).async {
                                 
-                                let imageData:NSData = NSData(contentsOf: imageUrl)!
-                                
+                                if !(tableUser["image_url"].string?.isEmpty)! {
+                                    var tmp_img : String?
+                                    if tableUser["image_url"].string?.range(of:"default.png") != nil {
+                                        tmp_img = "https://straightfromthea.com/wp-content/uploads/2011/09/No.42.jpg"
+                                    }
+                                    else {
+                                        tmp_img = tableUser["image_url"].string
+                                    }
+                                    
+                                    let imageUrl:URL = URL(string: tmp_img!)!
+                                    let imageData:NSData = NSData(contentsOf: imageUrl)!
+                                    
                                 DispatchQueue.main.async {
                                     let image = UIImage(data: imageData as Data)
                                     self.UserImg.image = image
@@ -94,6 +118,7 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
                                 DispatchQueue.main.async {
                                     self.ProjectTable.reloadData()
                                 }
+                            }
                             }
                         }
                         
