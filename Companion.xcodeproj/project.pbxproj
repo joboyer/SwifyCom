@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		060772962019EB6500E9153B /* Project.swift in Sources */ = {isa = PBXBuildFile; fileRef = 060772952019EB6500E9153B /* Project.swift */; };
 		0607729C2019EDB400E9153B /* ProjectTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0607729B2019EDB400E9153B /* ProjectTableViewCell.swift */; };
+		06388498202DD5C70057E525 /* Achievement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06388497202DD5C70057E525 /* Achievement.swift */; };
+		0638849E202DD6810057E525 /* AchievementTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0638849D202DD6810057E525 /* AchievementTableViewCell.swift */; };
 		0669C6032010B0640064D2F5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0669C6022010B0640064D2F5 /* AppDelegate.swift */; };
 		0669C6052010B0640064D2F5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0669C6042010B0640064D2F5 /* ViewController.swift */; };
 		0669C6082010B0640064D2F5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0669C6062010B0640064D2F5 /* Main.storyboard */; };
@@ -70,6 +72,8 @@
 /* Begin PBXFileReference section */
 		060772952019EB6500E9153B /* Project.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Project.swift; sourceTree = "<group>"; };
 		0607729B2019EDB400E9153B /* ProjectTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectTableViewCell.swift; sourceTree = "<group>"; };
+		06388497202DD5C70057E525 /* Achievement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Achievement.swift; sourceTree = "<group>"; };
+		0638849D202DD6810057E525 /* AchievementTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AchievementTableViewCell.swift; sourceTree = "<group>"; };
 		0669C5FF2010B0640064D2F5 /* Companion.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Companion.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0669C6022010B0640064D2F5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		0669C6042010B0640064D2F5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -151,9 +155,11 @@
 				0669C6092010B0640064D2F5 /* Assets.xcassets */,
 				060772952019EB6500E9153B /* Project.swift */,
 				0607729B2019EDB400E9153B /* ProjectTableViewCell.swift */,
+				06388497202DD5C70057E525 /* Achievement.swift */,
 				0669C60B2010B0640064D2F5 /* LaunchScreen.storyboard */,
 				0669C60E2010B0640064D2F5 /* Info.plist */,
 				0669C6302010BA980064D2F5 /* UserControllerViewController.swift */,
+				0638849D202DD6810057E525 /* AchievementTableViewCell.swift */,
 			);
 			path = Companion;
 			sourceTree = "<group>";
@@ -442,8 +448,10 @@
 				0607729C2019EDB400E9153B /* ProjectTableViewCell.swift in Sources */,
 				0669C6052010B0640064D2F5 /* ViewController.swift in Sources */,
 				0669C6032010B0640064D2F5 /* AppDelegate.swift in Sources */,
+				0638849E202DD6810057E525 /* AchievementTableViewCell.swift in Sources */,
 				0669C6312010BA980064D2F5 /* UserControllerViewController.swift in Sources */,
 				060772962019EB6500E9153B /* Project.swift in Sources */,
+				06388498202DD5C70057E525 /* Achievement.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

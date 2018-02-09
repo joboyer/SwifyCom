@@ -51,6 +51,8 @@ class ViewController: UIViewController {
     
     func getToken() {
         
+        
+        
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         let url = NSURL(string: "https://api.intra.42.fr/oauth/token")
         let request = NSMutableURLRequest(url: url! as URL)
@@ -64,10 +66,9 @@ class ViewController: UIViewController {
             } else if let d = data {
                 do {
                     if let dic : NSDictionary = try JSONSerialization.jsonObject(with: d, options: JSONSerialization.ReadingOptions.mutableContainers) as? NSDictionary {
-                        if let t = dic["access_token"] as? String {
-                            self.token = t
-                            print(self.token ?? "lol")
-                        }
+                        print(self.token = (dic["access_token"] as? String)!)
+                            
+                            
                     }
                 } catch (let err) {
                     print (err)

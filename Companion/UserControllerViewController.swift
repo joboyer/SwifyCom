@@ -21,11 +21,13 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
     @IBOutlet weak var Email: UILabel!
     
     @IBOutlet weak var ProjectTable: UITableView!
+    @IBOutlet weak var AchivementTable: UITableView!
     
     var token : String?
     var userName : String?
     var userInfo = [[String:AnyObject]]()
     var ProjectInfo : [NewProject] = []
+    var AchievementInfo : [NewAchievement] = []
     
     func getUserInfo() -> Void {
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
@@ -48,83 +50,117 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
                             self.present(alert, animated: true, completion: nil)
                             self.navigationController?.popViewController(animated: true)
                             DispatchQueue.main.async {
-                                self.performSegue(withIdentifier: "search", sender: nil)
+                                self.performSegue(withIdentifier: "backToHome", sender: nil)
                             }
                         }
                         else {
+                            if tableUser.isEmpty {
+                                if (tableUser["projects_users"].exists()) {
+                                    var Projects = tableUser["projects_users"].arrayValue
                             
-                            if (tableUser["project_users"].exists()) {
-                                var Projects = tableUser["projects_users"].arrayValue
-                            
-                                if (Projects.first?.isEmpty)! {
+                                    if (Projects.first?.isEmpty)! {
                                     Projects = ["", "50"]
+                                    }
+                            
+                                    for item in Projects {
+                                        if item["project"]["name"].isEmpty && item["final_mark"].isEmpty {
+                                            if item["status"] == "finished" && 1 == item["cursus_ids"].arrayValue.first! {
+                                                self.ProjectInfo.append(
+                                                    NewProject(
+                                                        na: (item["project"]["name"].string)!,
+                                                        rat: (item["final_mark"].int ?? 0)!
+                                                    )
+                                                )
+                                            }
+                                        }
+                                    }
+                            
                                 }
                             
-                                for item in Projects {
-                                    if item["project"]["name"].isEmpty && item["final_mark"].isEmpty {
-                                        if item["status"] == "finished" && 1 == item["cursus_ids"].arrayValue.first! {
-                                            self.ProjectInfo.append(
-                                                NewProject(
-                                                    na: (item["project"]["name"].string)!,
-                                                    rat: (item["final_mark"].int ?? 0)!
+                                if tableUser["achievements"].exists() {
+                                        var Achievements = tableUser["achievements"].arrayValue
+                                
+                                    if (Achievements.first?.isEmpty)! {
+                                        Achievements = ["none"]
+                                    }
+                                
+                                    for Achi in Achievements {
+                                        if Achi["name"].isEmpty {
+                                            print(Achi["name"])
+                                            self.AchievementInfo.append(
+                                                NewAchievement(
+                                                    name: (Achi["name"].string)!
                                                 )
                                             )
                                         }
                                     }
                                 }
                             
-                            }
+                                if tableUser["phone"].exists() {
+                                    self.Number.text = (tableUser["phone"].string)!
+                                }
+                                else {
+                                    self.Number.text = "0000000000"
+                                }
                             
-                            if (!(tableUser["phone"].exists())) {
-                                self.Number.text = (tableUser["phone"].string)!
-                            }
-                            else {
-                                self.Number.text = "0000000000"
-                            }
-                            
-                            if (!(tableUser["login"].string?.isEmpty)!) {
-                                self.Name.text = (tableUser["login"].string)!
-                            }
-                            if (!(tableUser["displayname"].string?.isEmpty)!) {
-                                self.LastName.text = (tableUser["displayname"].string)!
-                            }
-                            if (!(tableUser["email"].string?.isEmpty)!) {
-                                self.Email.text = (tableUser["email"].string)!
-                            }
+                                if (!(tableUser["login"].string?.isEmpty)!) {
+                                    self.Name.text = (tableUser["login"].string)!
+                                }
+                                if (!(tableUser["displayname"].string?.isEmpty)!) {
+                                    self.LastName.text = (tableUser["displayname"].string)!
+                                }
+                                if (!(tableUser["email"].string?.isEmpty)!) {
+                                    self.Email.text = (tableUser["email"].string)!
+                                }
                             //self.treatProjects(arr: self.ProjectInfo)
                             //self.ProjectInfo = arr
         
                             
-                            DispatchQueue.global(qos: .userInitiated).async {
+                                DispatchQueue.global(qos: .userInitiated).async {
                                 
-                                if !(tableUser["image_url"].string?.isEmpty)! {
-                                    var tmp_img : String?
-                                    if tableUser["image_url"].string?.range(of:"default.png") != nil {
-                                        tmp_img = "https://straightfromthea.com/wp-content/uploads/2011/09/No.42.jpg"
-                                    }
-                                    else {
-                                        tmp_img = tableUser["image_url"].string
-                                    }
+                                    if !(tableUser["image_url"].string?.isEmpty)! {
+                                        var tmp_img : String?
+                                        if tableUser["image_url"].string?.range(of:"default.png") != nil {
+                                            tmp_img = "https://straightfromthea.com/wp-content/uploads/2011/09/No.42.jpg"
+                                        }
+                                        else {
+                                            tmp_img = tableUser["image_url"].string
+                                        }
                                     
-                                    let imageUrl:URL = URL(string: tmp_img!)!
-                                    let imageData:NSData = NSData(contentsOf: imageUrl)!
+                                        let imageUrl:URL = URL(string: tmp_img!)!
+                                        let imageData:NSData = NSData(contentsOf: imageUrl)!
                                     
-                                DispatchQueue.main.async {
-                                    let image = UIImage(data: imageData as Data)
-                                    self.UserImg.image = image
-                                    self.UserImg.contentMode = UIViewContentMode.scaleAspectFit
-                                    // self.view.addSubview(imageView)
-                                }
-                                DispatchQueue.main.async {
-                                    self.ProjectTable.reloadData()
+                                        DispatchQueue.main.async {
+                                            let image = UIImage(data: imageData as Data)
+                                            self.UserImg.image = image
+                                            self.UserImg.contentMode = UIViewContentMode.scaleAspectFit
+
+                                        }
+                                        DispatchQueue.main.async {
+                                            self.ProjectTable.reloadData()
+                                        }
+                                        DispatchQueue.main.async{
+                                            self.AchivementTable.reloadData()
+                                        }
+                                    }
                                 }
                             }
+                            else {
+                                DispatchQueue.main.async {
+                                    self.performSegue(withIdentifier: "backToHome", sender: nil)
+                                }
                             }
                         }
                         
                     }
-                    case .failure(_):
-                            print("Error jojo")
+                    case .failure(let err):
+                        let alert = UIAlertController(title: err.localizedDescription, message: "Error my man", preferredStyle: UIAlertControllerStyle.alert)
+                        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                        self.navigationController?.popViewController(animated: true)
+                        DispatchQueue.main.async {
+                            self.performSegue(withIdentifier: "backToHome", sender: nil)
+                        }
                 }
                 
             }
@@ -141,9 +177,13 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
         self.ProjectTable.delegate = self
         self.ProjectTable.dataSource = self
         
-
+        self.AchivementTable.delegate = self
+        self.AchivementTable.dataSource = self
+        
+        
      
         ProjectTable.rowHeight = 30
+        AchivementTable.rowHeight = 30
     }
     
    
@@ -161,7 +201,12 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (ProjectInfo.count)
+        if tableView == ProjectTable {
+            return (ProjectInfo.count)
+        }
+        else {
+            return (AchievementInfo.count)
+        }
     }
     
     
@@ -174,10 +219,17 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-
+        
+        print(indexPath)
+        
+        if tableView == AchivementTable {
+            let cell = tableView.dequeueReusableCell(withIdentifier: "AchievementCell", for: indexPath) as? AchievementTableViewCell
+            print(AchievementInfo[indexPath.row].AchieNAme)
+            cell?.achie = (AchievementInfo[indexPath.row].AchieNAme)
+            return cell!
+        }
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "ProjectCell", for: indexPath) as! ProjectTableViewCell
-        print(ProjectInfo[indexPath.row].name)
         cell.tuple = (ProjectInfo[indexPath.row].name, ProjectInfo[indexPath.row].rating)
         return cell
     }
