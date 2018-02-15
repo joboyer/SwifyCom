@@ -28,7 +28,7 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
     var userInfo = [[String:AnyObject]]()
     var ProjectInfo : [NewProject] = []
     var AchievementInfo : [NewAchievement] = []
-    
+    var error : Bool = false
     func getUserInfo() -> Void {
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         let headers = [
@@ -54,7 +54,7 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
                             }
                         }
                         else {
-                            if tableUser.isEmpty {
+                            if !tableUser.isEmpty {
                                 if (tableUser["projects_users"].exists()) {
                                     var Projects = tableUser["projects_users"].arrayValue
                             
@@ -146,6 +146,7 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
                                 }
                             }
                             else {
+                                self.error = true
                                 DispatchQueue.main.async {
                                     self.performSegue(withIdentifier: "backToHome", sender: nil)
                                 }
@@ -191,6 +192,7 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
         if segue.identifier == "backToHome" {
             if let tv = segue.destination as? ViewController {
                 tv.token = String("")
+                tv.error = self.error
             }
         }
     }

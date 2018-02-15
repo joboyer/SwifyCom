@@ -17,6 +17,7 @@ class ViewController: UIViewController {
     var clientToken : String?
     var userToken : String?
     var token : String = ""
+    var error : Bool = false
     var tv : UserControllerViewController?
     
     
@@ -89,10 +90,19 @@ class ViewController: UIViewController {
     }
     
     override func viewDidLoad() {
+        print("gestion d'erreur: \(self.error)")
         if self.token.isEmpty {
             self.getToken()
         }
         super.viewDidLoad()
+        if self.error == true {
+            DispatchQueue.main.async {
+                let alert = UIAlertController(title: "Error", message: "User not found", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+                self.navigationController?.popViewController(animated: true)
+            }
+        }
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "42_theme")!)
         // Do any additional setup after loading the view, typically from a nib.
     }
