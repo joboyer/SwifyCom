@@ -90,11 +90,11 @@ class ViewController: UIViewController {
     }
     
     override func viewDidLoad() {
+        super.viewDidLoad()
         print("gestion d'erreur: \(self.error)")
         if self.token.isEmpty {
             self.getToken()
         }
-        super.viewDidLoad()
         if self.error == true {
             DispatchQueue.main.async {
                 let alert = UIAlertController(title: "Error", message: "User not found", preferredStyle: UIAlertControllerStyle.alert)

@@ -56,48 +56,59 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
                         else {
                             if !tableUser.isEmpty {
                                 if (tableUser["projects_users"].exists()) {
-                                    var Projects = tableUser["projects_users"].arrayValue
+                                    let Projects = tableUser["projects_users"].arrayValue
                             
-                                    if (Projects.first?.isEmpty)! {
-                                    Projects = ["", "50"]
+                                    if Projects.isEmpty {
+                                        self.ProjectInfo.append(
+                                            NewProject(
+                                                na: "No Projects found",
+                                                rat: 0
+                                            )
+                                        )
                                     }
+                                    else {
+                                        for item in Projects {
+                                            if item["project"]["name"].isEmpty && item["final_mark"].isEmpty {
+                                                if item["status"] == "finished" && 1 == item["cursus_ids"].arrayValue.first! {
+                                                    self.ProjectInfo.append(
+                                                        NewProject(
+                                                            na: (item["project"]["name"].string)!,
+                                                            rat: (item["final_mark"].int ?? 0)!
+                                                        )
+                                                    )
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             
-                                    for item in Projects {
-                                        if item["project"]["name"].isEmpty && item["final_mark"].isEmpty {
-                                            if item["status"] == "finished" && 1 == item["cursus_ids"].arrayValue.first! {
-                                                self.ProjectInfo.append(
-                                                    NewProject(
-                                                        na: (item["project"]["name"].string)!,
-                                                        rat: (item["final_mark"].int ?? 0)!
+                                if tableUser["achievements"].exists() {
+                                        let Achievements = tableUser["achievements"].arrayValue
+                                
+                                    if Achievements == nil {
+                                        self.AchievementInfo.append(
+                                            NewAchievement(
+                                                name: "Empty"
+                                            )
+                                        )
+                                    }
+                                    else {
+                                        for Achi in Achievements {
+                                            if Achi["name"].isEmpty {
+                                                print(Achi["name"])
+                                                self.AchievementInfo.append(
+                                                    NewAchievement(
+                                                        name: (Achi["name"].string)!
                                                     )
                                                 )
                                             }
                                         }
                                     }
-                            
                                 }
                             
-                                if tableUser["achievements"].exists() {
-                                        var Achievements = tableUser["achievements"].arrayValue
-                                
-                                    if (Achievements.first?.isEmpty)! {
-                                        Achievements = ["none"]
-                                    }
-                                
-                                    for Achi in Achievements {
-                                        if Achi["name"].isEmpty {
-                                            print(Achi["name"])
-                                            self.AchievementInfo.append(
-                                                NewAchievement(
-                                                    name: (Achi["name"].string)!
-                                                )
-                                            )
-                                        }
-                                    }
-                                }
-                            
-                                if tableUser["phone"].exists() {
+                                if tableUser["phone"] != nil {
                                     self.Number.text = (tableUser["phone"].string)!
+                                    self.Number.sizeToFit()
                                 }
                                 else {
                                     self.Number.text = "0000000000"
@@ -105,12 +116,15 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
                             
                                 if (!(tableUser["login"].string?.isEmpty)!) {
                                     self.Name.text = (tableUser["login"].string)!
+                                    self.Name.sizeToFit()
                                 }
                                 if (!(tableUser["displayname"].string?.isEmpty)!) {
                                     self.LastName.text = (tableUser["displayname"].string)!
+                                    self.LastName.sizeToFit()
                                 }
                                 if (!(tableUser["email"].string?.isEmpty)!) {
                                     self.Email.text = (tableUser["email"].string)!
+                                    self.Email.sizeToFit()
                                 }
                             //self.treatProjects(arr: self.ProjectInfo)
                             //self.ProjectInfo = arr
