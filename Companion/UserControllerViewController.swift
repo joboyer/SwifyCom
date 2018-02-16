@@ -23,12 +23,24 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
     @IBOutlet weak var ProjectTable: UITableView!
     @IBOutlet weak var AchivementTable: UITableView!
     
+    @IBOutlet weak var Skill1: UILabel!
+    @IBOutlet weak var Skill2: UILabel!
+    @IBOutlet weak var Skill3: UILabel!
+    @IBOutlet weak var Skill4: UILabel!
+    
+    @IBOutlet weak var Progress1: UIProgressView!
+    @IBOutlet weak var Progress2: UIProgressView!
+    @IBOutlet weak var Progress3: UIProgressView!
+    @IBOutlet weak var Progress4: UIProgressView!
+    
     var token : String?
     var userName : String?
     var userInfo = [[String:AnyObject]]()
     var ProjectInfo : [NewProject] = []
     var AchievementInfo : [NewAchievement] = []
     var error : Bool = false
+    
+    
     func getUserInfo() -> Void {
         UIApplication.shared.isNetworkActivityIndicatorVisible = true
         let headers = [
@@ -42,7 +54,6 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
                 case .success:
                     if let value = response.result.value {
                         let tableUser = JSON(value)
-                        print(tableUser)
                         let err = tableUser["error"].string
                         if err != nil {
                             let alert = UIAlertController(title: err, message: tableUser["message"].string, preferredStyle: UIAlertControllerStyle.alert)
@@ -55,7 +66,7 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
                         }
                         else {
                             if !tableUser.isEmpty {
-                                if (tableUser["projects_users"].exists()) {
+                                if tableUser["projects_users"].exists() {
                                     let Projects = tableUser["projects_users"].arrayValue
                             
                                     if Projects.isEmpty {
@@ -95,7 +106,6 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
                                     else {
                                         for Achi in Achievements {
                                             if Achi["name"].isEmpty {
-                                                print(Achi["name"])
                                                 self.AchievementInfo.append(
                                                     NewAchievement(
                                                         name: (Achi["name"].string)!
@@ -126,16 +136,74 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
                                     self.Email.text = (tableUser["email"].string)!
                                     self.Email.sizeToFit()
                                 }
-                            //self.treatProjects(arr: self.ProjectInfo)
-                            //self.ProjectInfo = arr
-        
+                                
+                                if tableUser["cursus_users"].exists() {
+                                    let InfoSkill = tableUser["cursus_users"]
+                                   
+                                    if !InfoSkill.isEmpty {
+                                        var tmp = 3
+                                        for (_, item) in InfoSkill {
+                                            let test = item.dictionary
+                                            for Skill in test!["skills"]!.array! {
+                                                
+                                                if !(Skill["name"].string?.isEmpty)! && Skill["level"].isEmpty {
+                                                    if tmp == 3 {
+                                                        self.Skill1.text = Skill["name"].string
+                                                        let tmp_troi = Skill["level"].float!
+                                                        if tmp_troi != nil {
+                                                            self.Progress1.progress = tmp_troi / 21.0
+                                                        }
+                                                        else {
+                                                            self.Progress1.progress = 0.0
+                                                        }
+                                                    }
+                                                    if tmp == 2 {
+                                                        self.Skill2.text = Skill["name"].string
+                                                        let tmp_deu = Skill["level"].float!
+                                                        if tmp_deu != nil {
+                                                            self.Progress2.progress = tmp_deu / 21.0
+                                                        }
+                                                        else {
+                                                            self.Progress2.progress = 0.0
+                                                        }
+                                                    }
+                                                    if tmp == 1 {
+                                                        self.Skill3.text = Skill["name"].string
+                                                        let tmp_un = Skill["level"].float!
+                                                        if tmp_un != nil {
+                                                            self.Progress3.progress = tmp_un / 21.0
+                                                        }
+                                                        else {
+                                                            self.Progress3.progress = 0.0
+                                                        }
+                                                    }
+                                                    if tmp == 0 {
+                                                        self.Skill4.text = Skill["name"].string
+                                                        let tmp_zer = Skill["level"].float!
+                                                        if tmp_zer != nil {
+                                                            self.Progress4.progress = tmp_zer / 21.0
+                                                        }
+                                                        else {
+                                                            self.Progress4.progress = 0.0
+                                                        }
+                                                        
+                                                    }
+                                                }
+                                                if tmp == 0 {
+                                                    break;
+                                                }
+                                                tmp = tmp - 1
+                                            }
+                                        }
+                                    }
+                                }
                             
                                 DispatchQueue.global(qos: .userInitiated).async {
                                 
                                     if !(tableUser["image_url"].string?.isEmpty)! {
                                         var tmp_img : String?
                                         if tableUser["image_url"].string?.range(of:"default.png") != nil {
-                                            tmp_img = "https://straightfromthea.com/wp-content/uploads/2011/09/No.42.jpg"
+                                            tmp_img = "https://cdn.intra.42.fr/users/medium_default.png"
                                         }
                                         else {
                                             tmp_img = tableUser["image_url"].string
@@ -195,7 +263,10 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
         self.AchivementTable.delegate = self
         self.AchivementTable.dataSource = self
         
-        
+        Progress1.progress = 0.0
+        Progress2.progress = 0.0
+        Progress3.progress = 0.0
+        Progress4.progress = 0.0
      
         ProjectTable.rowHeight = 30
         AchivementTable.rowHeight = 30
@@ -236,11 +307,8 @@ class UserControllerViewController: UIViewController, UITableViewDelegate, UITab
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        print(indexPath)
-        
         if tableView == AchivementTable {
             let cell = tableView.dequeueReusableCell(withIdentifier: "AchievementCell", for: indexPath) as? AchievementTableViewCell
-            print(AchievementInfo[indexPath.row].AchieNAme)
             cell?.achie = (AchievementInfo[indexPath.row].AchieNAme)
             return cell!
         }

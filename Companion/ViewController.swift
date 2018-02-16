@@ -28,10 +28,8 @@ class ViewController: UIViewController {
         let name_reg = "^[A-Za-z]*$"
         
         let name_test = NSPredicate(format: "SELF MATCHES %@", name_reg)
-                print((userName?.isEmpty)!)
         if name_test.evaluate(with: userName!) == false || (userName?.isEmpty)! == true
         {
-            print("pas content")
             let alert = UIAlertController(title: "Error", message: "Wrong login format", preferredStyle: UIAlertControllerStyle.alert)
             alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -67,7 +65,7 @@ class ViewController: UIViewController {
             } else if let d = data {
                 do {
                     if let dic : NSDictionary = try JSONSerialization.jsonObject(with: d, options: JSONSerialization.ReadingOptions.mutableContainers) as? NSDictionary {
-                        print(self.token = (dic["access_token"] as? String)!)
+                        self.token = (dic["access_token"] as? String)!
                             
                             
                     }
@@ -91,7 +89,6 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("gestion d'erreur: \(self.error)")
         if self.token.isEmpty {
             self.getToken()
         }

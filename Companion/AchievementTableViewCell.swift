@@ -26,7 +26,6 @@ class AchievementTableViewCell: UITableViewCell {
     var achie : (String?) {
         didSet {
             if let p = achie {
-                print(p)
                 if !p.isEmpty {
                     AchievementName.text = p
                 }
